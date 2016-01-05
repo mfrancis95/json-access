@@ -3,7 +3,10 @@ from json import load
 import sys
 
 parser = ArgumentParser("json-access")
-parser.add_argument("key")
+parser.add_argument("keys", nargs = "+")
 args = parser.parse_args()
 
-print(load(sys.stdin)[args.key])
+json = load(sys.stdin)
+
+for key in args.keys:
+    print(json[key])
