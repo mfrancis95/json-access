@@ -9,4 +9,6 @@ args = parser.parse_args()
 json = load(sys.stdin)
 
 for key in args.keys:
-    print(json[key])
+    value = json.get(key)
+    if value is not None:
+        print(value)
