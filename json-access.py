@@ -8,7 +8,11 @@ args = parser.parse_args()
 
 json = load(sys.stdin)
 
-for key in args.keys:
-    value = json.get(key)
-    if value is not None:
+for key in map(lambda key: key.split("."), args.keys):
+    try:
+        value = json[key[0]]
+        for subkey in key[1:]:
+            value = value[subkey]
         print(value)
+    except KeyError:
+        pass
