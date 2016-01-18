@@ -10,7 +10,7 @@ keys = args.keys
 data = json.load(sys.stdin)
 
 if keys:
-    for key in map(lambda key: key.split("."), args.keys):
+    for key in map(lambda key: key.split("."), keys):
         try:
             value = data[key[0]]
             for subkey in key[1:]:
