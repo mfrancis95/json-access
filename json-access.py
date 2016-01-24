@@ -1,22 +1,32 @@
 from argparse import ArgumentParser
-import json
+from json import loads
 import sys
 
 parser = ArgumentParser("json-access")
 parser.add_argument("keys", nargs = "*")
 args = parser.parse_args()
 
-keys = args.keys
-data = json.load(sys.stdin)
-
-if keys:
-    for key in map(lambda key: key.split("."), keys):
+def lazyload(file):
+    buffer = ""
+    for line in file:
+        buffer += line
         try:
-            value = data[key[0]]
-            for subkey in key[1:]:
-                value = value[subkey]
-            print(value)
-        except KeyError:
+            yield loads(buffer)
+            buffer = ""
+        except ValueError:
             pass
-else:
-    print(data)
+
+keys = args.keys
+
+for data in lazyload(sys.stdin):
+    if keys:
+        for key in map(lambda key: key.split("."), keys):
+            try:
+                value = data[key[0]]
+                for subkey in key[1:]:
+                    value = value[subkey]
+                print(value)
+            except KeyError:
+                pass
+    else:
+        print(data)
