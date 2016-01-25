@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from json import loads
 import sys
+from functools import reduce
 
 parser = ArgumentParser("json-access")
 parser.add_argument("keys", nargs = "*")
@@ -22,10 +23,7 @@ for data in lazyload(sys.stdin):
     if keys:
         for key in map(lambda key: key.split("."), keys):
             try:
-                value = data[key[0]]
-                for subkey in key[1:]:
-                    value = value[subkey]
-                print(value)
+                print(reduce(lambda value, subkey: value[subkey], key, data))
             except KeyError:
                 pass
     else:
