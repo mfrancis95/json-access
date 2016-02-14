@@ -11,11 +11,12 @@ parser.add_argument("keys", nargs = "*")
 args = parser.parse_args()
 
 indent = args.indent
+keys = list(map(lambda key: key.split("."), args.keys))
 
-def print_json(file, keys):
+def print_json(file):
     for json in load(file):
         if keys:
-            for key in map(lambda key: key.split("."), keys):
+            for key in keys:
                 try:
                     print(dumps(reduce(lambda value, subkey: value[subkey], key, json), indent = indent))
                 except KeyError:
@@ -26,6 +27,6 @@ def print_json(file, keys):
 file = args.file
 if file:
     with open(file) as f:
-        print_json(f, args.keys)
+        print_json(f)
 else:
-    print_json(sys.stdin, args.keys)
+    print_json(sys.stdin)
